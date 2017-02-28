@@ -1,4 +1,4 @@
-package com.lvmama.module_mine;
+package com.thousandsunny.module_mine;
 
 import android.content.Intent;
 import android.os.Bundle;

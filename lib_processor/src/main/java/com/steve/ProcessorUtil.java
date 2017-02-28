@@ -80,7 +80,7 @@ public class ProcessorUtil {
                 //builder.addField(fieldSpec);
 
                 if (annotatedClass.getAnnotatedClassElement().getKind() == ElementKind.CLASS) {
-                    mapMethod.addStatement("com.lvmama.router.RouterList.inject($S, $S)", annotatedClass.getClassName(), annotatedClass.getFullName());
+                    mapMethod.addStatement("com.thousandsunny.router.RouterList.inject($S, $S)", annotatedClass.getClassName(), annotatedClass.getFullName());
                 }
             }
             builder.addMethod(mapMethod.build());

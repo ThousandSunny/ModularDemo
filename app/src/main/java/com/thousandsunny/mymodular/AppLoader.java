@@ -1,7 +1,7 @@
-package com.lvmama.mymodular;
+package com.thousandsunny.mymodular;
 
-import com.lvmama.module_login.LoginLoader;
-import com.lvmama.module_mine.MineLoader;
+import com.thousandsunny.module_login.LoginLoader;
+import com.thousandsunny.module_mine.MineLoader;
 
 /**
  * Created by Steve on 2017/2/28.

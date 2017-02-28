@@ -1,11 +1,11 @@
-package com.lvmama.module_login;
+package com.thousandsunny.module_login;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.lvmama.router.RouterList;
+import com.thousandsunny.router.RouterList;
 import com.steve.NameGenerate;
 
 @NameGenerate

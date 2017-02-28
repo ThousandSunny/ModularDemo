@@ -1,4 +1,4 @@
-package com.lvmama.mymodular;
+package com.thousandsunny.mymodular;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.lvmama.router.RouterList;
+import com.thousandsunny.router.RouterList;
 
 public class MainActivity extends AppCompatActivity {
 

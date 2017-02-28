@@ -1,4 +1,4 @@
-package com.lvmama.module_mine;
+package com.thousandsunny.module_mine;
 
 /**
  * Created by Steve on 2017/2/27.

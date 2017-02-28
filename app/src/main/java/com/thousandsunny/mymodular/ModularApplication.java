@@ -1,4 +1,4 @@
-package com.lvmama.mymodular;
+package com.thousandsunny.mymodular;
 
 import android.app.Application;
 

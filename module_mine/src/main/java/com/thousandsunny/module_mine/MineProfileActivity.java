@@ -1,4 +1,4 @@
-package com.lvmama.module_mine;
+package com.thousandsunny.module_mine;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
