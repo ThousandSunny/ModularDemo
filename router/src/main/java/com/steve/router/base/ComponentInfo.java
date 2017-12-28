@@ -6,16 +6,25 @@ package com.steve.router.base;
 
 public class ComponentInfo {
 
+    public static final int TypeActivity = 1;
+    public static final int TypeService = 2;
+
+
     private int type;
     private String group;
+    private String pkg;
     private String name;
     private Class<?> clazz;
 
-    public ComponentInfo(int type, String group, String name, Class<?> clazz) {
+    public ComponentInfo(int type, String group, String pkg, String name) {
         this.type = type;
         this.group = group;
+        this.pkg = pkg;
         this.name = name;
-        this.clazz = clazz;
+    }
+
+    public String getPkg() {
+        return pkg;
     }
 
     public int getType() {
@@ -32,5 +41,9 @@ public class ComponentInfo {
 
     public Class<?> getClazz() {
         return clazz;
+    }
+
+    public void setClazz(Class<?> clazz) {
+        this.clazz = clazz;
     }
 }
