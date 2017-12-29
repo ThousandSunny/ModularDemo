@@ -12,5 +12,9 @@ public final class Constant {
 
     public static final String OptionModule = "moduleName";
 
+    public static final String GeneratePkg = "com.steve.generate";
+
+    public static final String ModuleSuffix = "_Loader";
+
 
 }

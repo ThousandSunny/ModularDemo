@@ -2,13 +2,16 @@ package com.steve.router.processor;
 
 import com.google.auto.service.AutoService;
 import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
 import com.squareup.javapoet.ParameterSpec;
 import com.squareup.javapoet.ParameterizedTypeName;
 import com.squareup.javapoet.TypeName;
+import com.squareup.javapoet.TypeSpec;
 import com.steve.router.annotation.Route;
 import com.steve.router.base.ComponentInfo;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -90,9 +93,11 @@ public class RouteProcessor extends AbstractProcessor {
             group = moduleName;
         }
         ComponentInfo info = new ComponentInfo(ComponentInfo.TypeActivity, group, pkg, name);
+        // 获取 Activity 的集合
         List<ComponentInfo> list = mAnnotatedClassMap.get(Constant.AnnotatedKey);
         if (list == null) {
             list = new ArrayList<>();
+            mAnnotatedClassMap.put(Constant.AnnotatedKey, list);
         }
         list.add(info);
     }
@@ -117,15 +122,40 @@ public class RouteProcessor extends AbstractProcessor {
         builder.addModifiers(Modifier.PUBLIC)
                 .returns(TypeName.VOID)
                 .addParameter(parameterSpec);
-        for (String s : map.keySet()) {
-            List<ComponentInfo> infos = map.get(s);
-            for (ComponentInfo info : infos) {
-                // 方法的内部语句
 
-            }
+        // 取出所有的 activity
+        List<ComponentInfo> activityList = map.get(Constant.AnnotatedKey);
+
+
+        for (ComponentInfo info : activityList) {
+            builder.addStatement("List<ComponentInfo>> list = targetMap.get($S)", info.getGroup());
+            builder.beginControlFlow("if (list == null) ");
+            builder.addStatement("list = new ArrayList<>()");
+            builder.addStatement("targetMap.put($S,list)", info.getGroup());
+            builder.endControlFlow();
+            builder.addStatement("ComponentInfo info = new ComponentInfo($L,$S,$S,$S)", info.getType(), info.getGroup(), info.getPkg(), info.getName());
+            builder.beginControlFlow("try");
+            builder.addStatement("info.setClazz(Class.forName(info.getPkg()+info.getName())");
+            builder.endControlFlow();
+            builder.beginControlFlow("catch(Exception e)");
+            builder.addStatement("e.printStackTrace()");
+            builder.endControlFlow();
+            builder.addStatement("list.add(info)");
         }
 
+        MethodSpec methodSpec = builder.build();
 
+        TypeSpec typeSpec = TypeSpec.classBuilder(moduleName + Constant.ModuleSuffix)
+                .addMethod(methodSpec)
+                .build();
+
+        JavaFile javaFile = JavaFile.builder(Constant.GeneratePkg, typeSpec).build();
+        try {
+            javaFile.writeTo(mFiler);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+        }
 
     }
 
