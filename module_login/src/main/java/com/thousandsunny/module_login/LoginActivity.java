@@ -1,15 +1,13 @@
 package com.thousandsunny.module_login;
 
-import android.content.Intent;
+import android.app.Activity;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
-import com.thousandsunny.router.RouterList;
-import com.steve.NameGenerate;
+import com.thousandsunny.router_annotation.annotation.annotaion.Route;
 
-@NameGenerate
-public class LoginActivity extends AppCompatActivity {
+@Route(name = "LoginActivity")
+public class LoginActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,9 +16,6 @@ public class LoginActivity extends AppCompatActivity {
         findViewById(R.id.button2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setClassName(LoginActivity.this, RouterList.getActivity("MineActivity"));
-                LoginActivity.this.startActivity(intent);
             }
         });
     }

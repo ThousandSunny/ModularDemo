@@ -7,10 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.thousandsunny.router_annotation.annotation.annotaion.Route;
+
 /**
  * Created by Steve on 2017/2/27.
  */
-
+@Route(name = "WelcomeActivity", group = "app")
 public class WelcomeActivity extends AppCompatActivity {
 
     private Button button;

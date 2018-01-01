@@ -7,6 +7,5 @@ package com.thousandsunny.module_mine;
 public class MineLoader {
 
     public static void init() {
-        RouterTemp.inject();
     }
 }

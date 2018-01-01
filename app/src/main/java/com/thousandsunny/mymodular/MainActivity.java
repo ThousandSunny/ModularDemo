@@ -6,8 +6,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import com.thousandsunny.router_annotation.annotation.annotaion.Route;
 import com.thousandsunny.router.RouterList;
 
+@Route(name = "LoginActivity", group = "app")
 public class MainActivity extends AppCompatActivity {
 
     private Button button;
@@ -30,8 +32,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-
 
 
 }

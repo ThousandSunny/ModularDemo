@@ -1,4 +1,4 @@
-package com.steve.router.base;
+package com.thousandsunny.router_annotation.annotation.base;
 
 /**
  * Created by SteveYan on 2017/12/25.

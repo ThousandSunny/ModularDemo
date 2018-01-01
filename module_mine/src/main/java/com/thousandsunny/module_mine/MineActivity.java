@@ -6,9 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-import com.steve.NameGenerate;
+import com.thousandsunny.router_annotation.annotation.annotaion.Route;
 
-@NameGenerate
+@Route(name = "MineActivity")
 public class MineActivity extends AppCompatActivity {
 
     @Override

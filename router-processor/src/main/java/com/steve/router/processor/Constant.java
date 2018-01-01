@@ -16,5 +16,6 @@ public final class Constant {
 
     public static final String ModuleSuffix = "_Loader";
 
+    static final String PREFIX_OF_LOGGER = "Router::Compiler ";
 
 }

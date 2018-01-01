@@ -8,7 +8,6 @@ package com.thousandsunny.module_login;
 public class LoginLoader {
 
     public static void init() {
-        RouterTemp.inject();
     }
 
 }
