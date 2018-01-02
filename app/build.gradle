@@ -17,7 +17,7 @@ android {
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = [moduleName: "app"]
+                arguments = [moduleName: project.getName()]
             }
         }
 

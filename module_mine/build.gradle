@@ -13,11 +13,9 @@ android {
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = [moduleName: "mine"]
+                arguments = [moduleName: project.getName()]
             }
         }
-
-
     }
     buildTypes {
         release {

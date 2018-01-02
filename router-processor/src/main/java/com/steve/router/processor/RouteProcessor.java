@@ -1,7 +1,6 @@
 package com.steve.router.processor;
 
 import com.google.auto.service.AutoService;
-
 import com.squareup.javapoet.ClassName;
 import com.squareup.javapoet.JavaFile;
 import com.squareup.javapoet.MethodSpec;
@@ -21,7 +20,6 @@ import java.util.Set;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Filer;
-import javax.annotation.processing.Messager;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
@@ -31,6 +29,7 @@ import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.element.PackageElement;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.util.Elements;
 
@@ -44,12 +43,11 @@ import javax.lang.model.util.Elements;
 @SupportedAnnotationTypes("com.thousandsunny.router_annotation.annotation.annotaion.Route")
 public class RouteProcessor extends AbstractProcessor {
 
+
     // 文件相关的辅助类
     private Filer mFiler;
     // 元素相关的辅助类
     private Elements mElementsUtil;
-    // 日志相关的辅助类
-    private Messager mMessager;
     // 解析的目标注解集合
     private HashMap<String, List<ComponentInfo>> mAnnotatedClassMap = new HashMap<>();
 
@@ -64,7 +62,6 @@ public class RouteProcessor extends AbstractProcessor {
         logger.info("进行初始化");
 
         mElementsUtil = processingEnvironment.getElementUtils();
-        mMessager = processingEnvironment.getMessager();
         mFiler = processingEnvironment.getFiler();
 
         Map<String, String> options = processingEnvironment.getOptions();
@@ -96,7 +93,8 @@ public class RouteProcessor extends AbstractProcessor {
         if (element == null) {
             return;
         }
-        Element pkgElement = element.getEnclosingElement();
+        // 强转成  PackageElement
+        PackageElement pkgElement = (PackageElement) element.getEnclosingElement();
         Route route = element.getAnnotation(Route.class);
         if (route == null) {
             return;
@@ -104,7 +102,7 @@ public class RouteProcessor extends AbstractProcessor {
 
         String group = route.group();
         String name = route.name();
-        String pkg = pkgElement.getSimpleName().toString();
+        String pkg = pkgElement.getQualifiedName().toString();
         if (StringUtil.isEmpty(name)) {
             name = element.getSimpleName().toString();
         }
@@ -127,22 +125,48 @@ public class RouteProcessor extends AbstractProcessor {
 
         TypeName mComponentInfoClassName = ClassName.get(ComponentInfo.class);
 
-        // 声明方法参数的类型
+        // 声明 inject 方法参数的类型
         ParameterizedTypeName paramListComponent = ParameterizedTypeName.get(ClassName.get(List.class), mComponentInfoClassName);
         ParameterizedTypeName moduleLoaderParameter = ParameterizedTypeName.get(
-            ClassName.get(Map.class),
-            ClassName.get(String.class),
-            paramListComponent
+                ClassName.get(Map.class),
+                ClassName.get(String.class),
+                paramListComponent
         );
 
-        // 声明方法的参数
-        ParameterSpec parameterSpec = ParameterSpec.builder(moduleLoaderParameter, "targetMap", Modifier.FINAL).build();
+        // 声明inject方法的参数
+        ParameterSpec injectParameterSpec = ParameterSpec.builder(moduleLoaderParameter, "targetMap", Modifier.FINAL).build();
 
-        // 声明方法构造器
-        MethodSpec.Builder builder = MethodSpec.methodBuilder("inject");
-        builder.addModifiers(Modifier.PUBLIC)
-            .returns(TypeName.VOID)
-            .addParameter(parameterSpec);
+        // 声明 injectElement 方法的构造器
+        MethodSpec.Builder injectElementBuilder = MethodSpec.methodBuilder(Constant.MethodInjectElement)
+                .addModifiers(Modifier.PRIVATE)
+                .addParameter(injectParameterSpec)
+                .addParameter(String.class, "group")
+                .addParameter(String.class, "pkg")
+                .addParameter(String.class, "name")
+                .addParameter(int.class, "type");
+
+        injectElementBuilder.addStatement("List<$T> list = targetMap.get(name)", ComponentInfo.class)
+                .beginControlFlow("if( list == null )")
+                .addStatement("list = new $T<>()", ArrayList.class)
+                .addStatement("targetMap.put(group, list)")
+                .endControlFlow()
+                .addStatement("ComponentInfo info = new ComponentInfo(type, group, pkg, name)")
+                .beginControlFlow("try")
+                .addStatement(" info.setClazz(Class.forName(pkg + name))")
+                .nextControlFlow("catch(Exception e)")
+                .addStatement("e.printStackTrace()")
+                .endControlFlow()
+                .addStatement("list.add(info)");
+
+
+        MethodSpec injectElementMethod = injectElementBuilder.build();
+
+
+        // 声明 inject 方法构造器
+        MethodSpec.Builder injectMethodBuilder = MethodSpec.methodBuilder(Constant.MethodInject);
+        injectMethodBuilder.addModifiers(Modifier.PUBLIC)
+                .returns(TypeName.VOID)
+                .addParameter(injectParameterSpec);
 
         // 取出所有的 activity
         List<ComponentInfo> activityList = map.get(Constant.AnnotatedKey);
@@ -152,25 +176,16 @@ public class RouteProcessor extends AbstractProcessor {
         }
 
         for (ComponentInfo info : activityList) {
-            builder.addStatement("List<ComponentInfo> list = targetMap.get($S)", info.getGroup());
-            builder.beginControlFlow("if (list == null) ");
-            builder.addStatement("list = new $T<>()", ArrayList.class);
-            builder.addStatement("targetMap.put($S,list)", info.getGroup());
-            builder.endControlFlow();
-            builder.addStatement("ComponentInfo info = new ComponentInfo($L,$S,$S,$S)", info.getType(), info.getGroup(), info.getPkg(), info.getName());
-            builder.beginControlFlow("try");
-            builder.addStatement("info.setClazz(Class.forName(info.getPkg()+info.getName()))");
-            builder.nextControlFlow("catch(Exception e)");
-            builder.addStatement("e.printStackTrace()");
-            builder.endControlFlow();
-            builder.addStatement("list.add(info)");
+            injectMethodBuilder.addStatement("injectElement(targetMap, $S, $S, $S,$L)", info.getGroup(), info.getPkg(), info.getName(), info.getType());
         }
 
-        MethodSpec methodSpec = builder.build();
+        MethodSpec injectMethodSpec = injectMethodBuilder.build();
 
         TypeSpec typeSpec = TypeSpec.classBuilder(moduleName + Constant.ModuleSuffix)
-            .addMethod(methodSpec)
-            .build();
+                .addModifiers(Modifier.PUBLIC)
+                .addMethod(injectElementMethod)
+                .addMethod(injectMethodSpec)
+                .build();
 
         JavaFile javaFile = JavaFile.builder(Constant.GeneratePkg, typeSpec).build();
 
@@ -178,7 +193,6 @@ public class RouteProcessor extends AbstractProcessor {
             javaFile.writeTo(mFiler);
         } catch (IOException e) {
             e.printStackTrace();
-
         }
 
     }

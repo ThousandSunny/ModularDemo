@@ -13,7 +13,7 @@ android {
 
         javaCompileOptions {
             annotationProcessorOptions {
-                arguments = [moduleName: "login"]
+                arguments = [moduleName: project.getName()]
             }
         }
 

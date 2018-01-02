@@ -6,7 +6,7 @@ import android.view.View;
 
 import com.thousandsunny.router_annotation.annotation.annotaion.Route;
 
-@Route(name = "LoginActivity")
+@Route()
 public class LoginActivity extends Activity {
 
     @Override
