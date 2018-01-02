@@ -1,8 +1,5 @@
 package com.thousandsunny.mymodular;
 
-import com.thousandsunny.module_login.LoginLoader;
-import com.thousandsunny.module_mine.MineLoader;
-
 /**
  * Created by Steve on 2017/2/28.
  */
@@ -10,7 +7,5 @@ import com.thousandsunny.module_mine.MineLoader;
 public class AppLoader {
 
     public static void init() {
-        LoginLoader.init();
-        MineLoader.init();
     }
 }
