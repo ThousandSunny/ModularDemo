@@ -1,7 +1,6 @@
 package com.steve.hook_sample;
 
 import android.os.Handler;
-import android.util.Log;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
@@ -45,6 +44,9 @@ public class HookHelper {
         }
     }
 
+    /**
+     * 本打算在这也用动态代理，后来发现 ActivityThread 中的 handler 对象的 mCallback 对象是空的；并且 Callback 接口是 public 的，所以直接替换是很好的策略
+     */
     public static void hookActivityThreadHandler() {
         try {
             Class<?> activityThreadClass = Class.forName("android.app.ActivityThread");
