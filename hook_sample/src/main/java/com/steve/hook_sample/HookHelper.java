@@ -1,9 +1,13 @@
 package com.steve.hook_sample;
 
+import android.content.Context;
 import android.os.Handler;
 
+import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
+
+import dalvik.system.DexClassLoader;
 
 /**
  * Created by SteveYan on 2018/1/30.
@@ -74,4 +78,26 @@ public class HookHelper {
             e.printStackTrace();
         }
     }
+
+
+    public static void loadApk(Context context, String apkPath) {
+        File dexFile = context.getDir("dex", Context.MODE_PRIVATE);
+
+        File apkFile = new File(apkPath);
+
+        ClassLoader classLoader = context.getClassLoader();
+        DexClassLoader dexClassLoader = new DexClassLoader(apkFile.getAbsolutePath(), dexFile.getAbsolutePath(), null, classLoader.getParent());
+
+        try {
+            Field fieldClassLoader = ClassLoader.class.getDeclaredField("parent");
+            if (fieldClassLoader != null) {
+                fieldClassLoader.setAccessible(true);
+                fieldClassLoader.set(classLoader, dexClassLoader);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

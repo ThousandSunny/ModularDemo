@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 
 public class MainActivity extends Activity {
+    String TAG = "ClassLoaderTAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -14,10 +15,15 @@ public class MainActivity extends Activity {
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,DestinationActivity.class);
-                startActivity(intent);
+                start();
             }
         });
+    }
 
+    private void start() {
+        Intent intent = new Intent();
+        intent.setPackage("com.thousandsunny.mymodular");
+        intent.setClassName(this, "com.thousandsunny.mymodular.MainActivity");
+        startActivity(intent);
     }
 }

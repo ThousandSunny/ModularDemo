@@ -2,6 +2,9 @@ package com.steve.hook_sample;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.Environment;
+
+import java.io.File;
 
 /**
  * 参考文章： http://pingguohe.net/2017/12/25/android-plugin-practice-part-1.html
@@ -19,6 +22,7 @@ public class HookApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
+        HookHelper.loadApk(base, Environment.getExternalStorageDirectory().getPath() + File.separator + "lib.apk");
         HookHelper.hookActivityManagerService(getClassLoader());
         HookHelper.hookActivityThreadHandler();
     }
