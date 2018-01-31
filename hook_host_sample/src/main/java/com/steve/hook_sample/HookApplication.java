@@ -13,6 +13,7 @@ import java.io.File;
  */
 
 public class HookApplication extends Application {
+    private String apk_name = "hook_plugin_sample-debug.apk";
 
     @Override
     public void onCreate() {
@@ -22,7 +23,7 @@ public class HookApplication extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        HookHelper.loadApk(base, Environment.getExternalStorageDirectory().getPath() + File.separator + "lib.apk");
+        HookHelper.loadApk(base, Environment.getExternalStorageDirectory().getPath() + File.separator + apk_name);
         HookHelper.hookActivityManagerService(getClassLoader());
         HookHelper.hookActivityThreadHandler();
     }

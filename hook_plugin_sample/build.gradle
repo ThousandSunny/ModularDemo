@@ -6,9 +6,9 @@ android {
 
 
     defaultConfig {
-        applicationId "com.steve.hook_sample"
+        applicationId "com.steve.hook_plugin_sample"
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 20
         versionCode 1
         versionName "1.0"
 
@@ -25,4 +25,5 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
 }

@@ -1,4 +1,4 @@
-include ':app', ':hook_sample', ':plugin', ':plugin_sample', ':plugin_host_sample',
+include ':app', ':hook_host_sample', ':plugin', ':plugin_sample', ':plugin_host_sample', ':hook_plugin_sample',
         ':module_mine',
         ':module_login',
         ':router_driver',

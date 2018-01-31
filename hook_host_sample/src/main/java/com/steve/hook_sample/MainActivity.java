@@ -22,8 +22,8 @@ public class MainActivity extends Activity {
 
     private void start() {
         Intent intent = new Intent();
-        intent.setPackage("com.thousandsunny.mymodular");
-        intent.setClassName(this, "com.thousandsunny.mymodular.MainActivity");
+        intent.setPackage("com.steve.hook_plugin_sample");
+        intent.setClassName(this, "com.steve.hook_plugin_sample.MainActivity");
         startActivity(intent);
     }
 }
