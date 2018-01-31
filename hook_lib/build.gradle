@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 25
@@ -6,11 +6,11 @@ android {
 
 
     defaultConfig {
-        applicationId "com.steve.hook_sample"
         minSdkVersion 14
         targetSdkVersion 20
         versionCode 1
         versionName "1.0"
+
 
     }
 
@@ -25,5 +25,4 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(":hook_lib")
 }

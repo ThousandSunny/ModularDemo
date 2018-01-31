@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.os.Environment;
 
+import com.steve.hook_lib.HookHelper;
+
 import java.io.File;
 
 /**

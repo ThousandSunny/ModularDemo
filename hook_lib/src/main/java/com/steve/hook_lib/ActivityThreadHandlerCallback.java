@@ -1,4 +1,4 @@
-package com.steve.hook_sample;
+package com.steve.hook_lib;
 
 import android.content.Intent;
 import android.os.Handler;

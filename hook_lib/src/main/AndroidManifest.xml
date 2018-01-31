@@ -1,0 +1,8 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.steve.hook_lib">
+
+    <application>
+        <activity android:name="com.steve.hook_lib.PlaceHolderActivity">
+        </activity>
+    </application>
+</manifest>
