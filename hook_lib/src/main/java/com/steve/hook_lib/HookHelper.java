@@ -1,13 +1,15 @@
 package com.steve.hook_lib;
 
+import android.app.Instrumentation;
 import android.content.Context;
 import android.os.Handler;
 
+import dalvik.system.DexClassLoader;
+
 import java.io.File;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
-
-import dalvik.system.DexClassLoader;
 
 /**
  * Created by SteveYan on 2018/1/30.
@@ -97,6 +99,28 @@ public class HookHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void loadApkResource(Context context, String apkPath) {
+        try {
+            Class<?> activityThreadClass = Class.forName("android.app.ActivityThread");
+
+            Method currentActivityThreadMethod = activityThreadClass.getDeclaredMethod("currentActivityThread");
+            currentActivityThreadMethod.setAccessible(true);
+
+            Object currentActivityThread = currentActivityThreadMethod.invoke(null);
+            Field mInstrumentationField = activityThreadClass.getDeclaredField("mInstrumentation");
+            mInstrumentationField.setAccessible(true);
+            Instrumentation mInstrumentation = (Instrumentation) mInstrumentationField.get(currentActivityThread);
+
+            Instrumentation proxy = new MyInstrumentation(mInstrumentation, context, apkPath);
+
+            mInstrumentationField.set(currentActivityThread, proxy);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 
